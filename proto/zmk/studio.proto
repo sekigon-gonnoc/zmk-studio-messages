@@ -129,4 +129,5 @@ message SettingsResponse {
     bytes value = 11;
     bool dirty = 12;
     bool persisted = 13;
+    uint32 generation = 14;
 }
