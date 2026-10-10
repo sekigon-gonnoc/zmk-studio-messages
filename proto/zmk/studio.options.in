@@ -1,0 +1,4 @@
+zmk.studio.SettingsCommand.value max_size:64
+zmk.studio.SettingsResponse.schema_sha256 max_size:32 fixed_length:true
+zmk.studio.SettingsResponse.schema_data max_size:32
+zmk.studio.SettingsResponse.value max_size:64

@@ -15,6 +15,7 @@ message Request {
         zmk.core.Request core = 3;
         zmk.behaviors.Request behaviors = 4;
         zmk.keymap.Request keymap = 5;
+        SettingsRequest settings = 6;
     }
 }
 
@@ -32,6 +33,7 @@ message RequestResponse {
         zmk.core.Response core = 3;
         zmk.behaviors.Response behaviors = 4;
         zmk.keymap.Response keymap = 5;
+        SettingsResponse settings = 6;
     }
 }
 
@@ -40,4 +42,91 @@ message Notification {
         zmk.core.Notification core = 2;
         zmk.keymap.Notification keymap = 5;
     }
+}
+
+enum SettingsOperation {
+    SETTINGS_OPERATION_UNSPECIFIED = 0;
+    SETTINGS_OPERATION_READ_SCHEMA = 1;
+    SETTINGS_OPERATION_READ = 2;
+    SETTINGS_OPERATION_WRITE_TEMP = 3;
+    SETTINGS_OPERATION_RESET = 4;
+    SETTINGS_OPERATION_SAVE = 5;
+    SETTINGS_OPERATION_DISCARD = 6;
+    SETTINGS_OPERATION_STATUS = 7;
+}
+
+enum SettingsTarget {
+    SETTINGS_TARGET_LOCAL = 0;
+    SETTINGS_TARGET_SHARED = 1;
+    SETTINGS_TARGET_OWNER = 2;
+}
+
+enum SettingsValueType {
+    SETTINGS_VALUE_TYPE_UNSPECIFIED = 0;
+    SETTINGS_VALUE_TYPE_BOOL = 1;
+    SETTINGS_VALUE_TYPE_U8 = 2;
+    SETTINGS_VALUE_TYPE_U16 = 3;
+    SETTINGS_VALUE_TYPE_U32 = 4;
+    SETTINGS_VALUE_TYPE_S8 = 5;
+    SETTINGS_VALUE_TYPE_S16 = 6;
+    SETTINGS_VALUE_TYPE_S32 = 7;
+    SETTINGS_VALUE_TYPE_ENUM = 8;
+}
+
+enum SettingsError {
+    SETTINGS_ERROR_NONE = 0;
+    SETTINGS_ERROR_INVALID_ARGUMENT = 1;
+    SETTINGS_ERROR_NOT_FOUND = 2;
+    SETTINGS_ERROR_READ_ONLY = 3;
+    SETTINGS_ERROR_OUT_OF_RANGE = 4;
+    SETTINGS_ERROR_NO_SPACE = 5;
+    SETTINGS_ERROR_BUSY = 6;
+    SETTINGS_ERROR_LOCKED = 7;
+    SETTINGS_ERROR_OFFLINE = 8;
+    SETTINGS_ERROR_TIMEOUT = 9;
+    SETTINGS_ERROR_IO = 10;
+    SETTINGS_ERROR_STALE = 11;
+    SETTINGS_ERROR_UNSUPPORTED = 12;
+}
+
+enum SettingsValueOrigin {
+    SETTINGS_VALUE_ORIGIN_UNSPECIFIED = 0;
+    SETTINGS_VALUE_ORIGIN_TEMP = 1;
+    SETTINGS_VALUE_ORIGIN_PERSISTED = 2;
+    SETTINGS_VALUE_ORIGIN_DEFAULT = 3;
+}
+
+message SettingsRequest {
+    oneof request_type {
+        SettingsCommand command = 1;
+    }
+}
+
+message SettingsCommand {
+    SettingsOperation operation = 1;
+    SettingsTarget target = 2;
+    uint32 session_id = 3;
+    uint32 sequence = 4;
+    uint32 group_id = 5;
+    uint32 setting_id = 6;
+    uint32 offset = 7;
+    uint32 length = 8;
+    SettingsValueType value_type = 9;
+    bytes value = 10;
+}
+
+message SettingsResponse {
+    SettingsOperation operation = 1;
+    SettingsError error = 2;
+    SettingsValueType value_type = 3;
+    SettingsValueOrigin origin = 4;
+    uint32 session_id = 5;
+    uint32 sequence = 6;
+    uint32 schema_compressed_size = 7;
+    uint32 schema_size = 8;
+    bytes schema_sha256 = 9;
+    bytes schema_data = 10;
+    bytes value = 11;
+    bool dirty = 12;
+    bool persisted = 13;
 }
