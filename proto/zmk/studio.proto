@@ -96,6 +96,12 @@ enum SettingsValueOrigin {
     SETTINGS_VALUE_ORIGIN_DEFAULT = 3;
 }
 
+enum SettingsRelayStatus {
+    SETTINGS_RELAY_STATUS_NONE = 0;
+    SETTINGS_RELAY_STATUS_PEER_APPLIED = 1;
+    SETTINGS_RELAY_STATUS_LOCAL_ONLY = 2;
+}
+
 message SettingsRequest {
     oneof request_type {
         SettingsCommand command = 1;
@@ -130,4 +136,5 @@ message SettingsResponse {
     bool dirty = 12;
     bool persisted = 13;
     uint32 generation = 14;
+    SettingsRelayStatus relay_status = 15;
 }
